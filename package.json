@@ -1,0 +1,46 @@
+{
+  "name": "loopback-next-extension-starter",
+  "version": "1.0.0",
+  "description": "A starter project for LoopBack Next Extensions",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:lib && npm run build:lib6",
+    "build:lib": "tsc --target es2017 --outDir dist",
+    "build:lib6": "tsc --target es2015 --outDir dist6",
+    "lint": "tslint -c tslint.full.json --project tsconfig.json --type-check",
+    "lint:fix": "npm run lint -- --fix",
+    "prepublish": "npm run build",
+    "pretest": "npm run build",
+    "test": "mocha",
+    "posttest": "npm run lint",
+    "vscode-test": "mocha && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/strongloop/loopback-next-extension-starter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/strongloop/loopback-next-extension-starter/issues"
+  },
+  "homepage": "https://github.com/strongloop/loopback-next-extension-starter#readme",
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "dist",
+    "dist6"
+  ],
+  "dependencies": {
+    "@loopback/core": "^4.0.0-alpha.14",
+    "@loopback/repository": "^4.0.0-alpha.8"
+  },
+  "devDependencies": {
+    "@loopback/testlab": "^4.0.0-alpha.7",
+    "@types/mocha": "^2.2.43",
+    "mocha": "^3.5.3",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2"
+  }
+}

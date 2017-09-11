@@ -1,0 +1,46 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "taskName": "Watch and compile TypeScript",
+      "command": "tsc",
+      "args": ["--watch"],
+      "type": "process",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "never",
+        "focus": false,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "taskName": "Test and lint",
+      "command": "npm",
+      "args": [
+        "--silent",
+        "run",
+        "vscode-test"
+      ],
+      "type": "process",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated"
+      },
+      "problemMatcher": "$tslint5"
+    }
+  ]
+}

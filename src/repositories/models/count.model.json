@@ -1,0 +1,22 @@
+{
+  "name": "Todo",
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "id": true
+    },
+    "count": {
+      "type": "integer",
+      "required": true
+    },
+    "lastAccess": {
+      "type": "date",
+      "required": false
+    },
+    "avgReqTime": {
+      "type": "number",
+      "required": false
+    }
+  }
+}

@@ -21,7 +21,7 @@
     "tslint:fix": "npm run lint -- --fix",
     "prepublish": "npm run build",
     "pretest": "npm run clean && npm run build",
-    "test": "mocha",
+    "test": "/bin/bash -c '[[ $(node -v) =~ [[:digit:]]+ ]] && [[ ${BASH_REMATCH[0]} -gt 6 ]]' && mocha dist/test || mocha dist6/test",
     "posttest": "npm run lint",
     "test:dev": "mocha && npm run lint"
   },

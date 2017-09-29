@@ -4,3 +4,5 @@
 // License text available at https://opensource.org/licenses/MIT
 
 export * from './decorators/txIdFromHeader.decorator';
+export * from './mixins/logger.mixin';
+export * from './types';

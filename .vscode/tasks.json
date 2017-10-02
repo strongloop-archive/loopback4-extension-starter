@@ -5,8 +5,12 @@
   "tasks": [
     {
       "taskName": "Watch and compile TypeScript",
-      "command": "tsc",
-      "args": ["--watch"],
+      "command": "npm",
+      "args": [
+        "--silent",
+        "run",
+        "build:watch"
+      ],
       "type": "process",
       "isBackground": true,
       "problemMatcher": "$tsc-watch",
@@ -27,7 +31,7 @@
       "args": [
         "--silent",
         "run",
-        "vscode-test"
+        "test:dev"
       ],
       "type": "process",
       "group": {

@@ -11,31 +11,29 @@
     "build:lib": "tsc --target es2017 --outDir dist",
     "build:lib6": "tsc --target es2015 --outDir dist6",
     "build:watch": "tsc --watch",
+    "clean": "rm -rf dist dist6",
     "lint": "tslint -c tslint.full.json --project tsconfig.json --type-check",
     "lint:fix": "npm run lint -- --fix",
     "prepublish": "npm run build",
-    "pretest": "npm run build",
+    "pretest": "npm run clean && npm run build",
     "test": "mocha",
     "posttest": "npm run lint",
     "test:dev": "mocha && npm run lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/strongloop/loopback-next-extension-starter.git"
+    "url":
+      "git+https://github.com/strongloop/loopback-next-extension-starter.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/strongloop/loopback-next-extension-starter/issues"
+    "url":
+      "https://github.com/strongloop/loopback-next-extension-starter/issues"
   },
-  "homepage": "https://github.com/strongloop/loopback-next-extension-starter#readme",
-  "files": [
-    "README.md",
-    "index.js",
-    "index.d.ts",
-    "dist",
-    "dist6"
-  ],
+  "homepage":
+    "https://github.com/strongloop/loopback-next-extension-starter#readme",
+  "files": ["README.md", "index.js", "index.d.ts", "dist", "dist6"],
   "dependencies": {
     "@loopback/core": "^4.0.0-alpha.14",
     "@loopback/repository": "^4.0.0-alpha.8"

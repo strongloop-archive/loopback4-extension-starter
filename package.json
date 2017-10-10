@@ -12,8 +12,13 @@
     "build:lib6": "tsc --target es2015 --outDir dist6",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist dist6",
-    "lint": "tslint -c tslint.full.json --project tsconfig.json --type-check",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "npm run prettier:check && npm run tslint",
+    "lint:fix": "npm run prettier:fix && npm run tslint:fix",
+    "prettier:cli": "prettier \"**/*.ts\" \"**/*.js\"",
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "tslint": "tslint -c tslint.full.json --project tsconfig.json --type-check",
+    "tslint:fix": "npm run lint -- --fix",
     "prepublish": "npm run build",
     "pretest": "npm run clean && npm run build",
     "test": "mocha",
@@ -22,18 +27,21 @@
   },
   "repository": {
     "type": "git",
-    "url":
-      "git+https://github.com/strongloop/loopback-next-extension-starter.git"
+    "url": "git+https://github.com/strongloop/loopback-next-extension-starter.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url":
-      "https://github.com/strongloop/loopback-next-extension-starter/issues"
+    "url": "https://github.com/strongloop/loopback-next-extension-starter/issues"
   },
-  "homepage":
-    "https://github.com/strongloop/loopback-next-extension-starter#readme",
-  "files": ["README.md", "index.js", "index.d.ts", "dist", "dist6"],
+  "homepage": "https://github.com/strongloop/loopback-next-extension-starter#readme",
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "dist",
+    "dist6"
+  ],
   "dependencies": {
     "@loopback/context": "^4.0.0-alpha.14",
     "@loopback/core": "^4.0.0-alpha.16",
@@ -44,6 +52,7 @@
     "@loopback/testlab": "^4.0.0-alpha.9",
     "@types/mocha": "^2.2.43",
     "mocha": "^3.5.3",
+    "prettier": "^1.7.4",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   }

@@ -1,3 +1,2 @@
 --recursive
 --reporter dot
-dist/test

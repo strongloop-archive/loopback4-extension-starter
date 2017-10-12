@@ -4,15 +4,20 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {sinon} from '@loopback/testlab';
-import {ParsedRequest} from '@loopback/core';
-import {LogProvider} from '../..';
+import {ParsedRequest} from '@loopback/rest';
+import {LogActionProvider, LogFn} from '../../..';
 
-describe('LogProvider', () => {
+describe('LogProvider (unit)', () => {
   // tslint:disable-next-line:no-any
   let spy: any;
+  let log: LogFn;
+  const req = <ParsedRequest>{url: '/test'};
+
   beforeEach(() => {
     spy = sinon.spy(console, 'log');
   });
+
+  beforeEach(getLogger);
 
   afterEach(() => {
     spy.restore();
@@ -21,23 +26,23 @@ describe('LogProvider', () => {
   it('logs a value without a start time', () => {
     const match = '/test : () => test message';
 
-    runTest(match);
+    log(req, [], 'test message');
+    sinon.assert.calledWith(spy, sinon.match(match));
   });
 
   it('logs a value with a start time', () => {
-    const match = 'ms: /test : () => test message';
+    const match = '100.02ms: /test : () => test message';
     const startTime = process.hrtime();
 
-    runTest(match, startTime);
+    log(req, [], 'test message', startTime);
+    sinon.assert.calledWith(spy, sinon.match(match));
   });
 
-  function runTest(match: string, startTime?: [number, number]) {
-    const log = new LogProvider().value();
-    // prettier-ignore
-    const req = <ParsedRequest> {url: '/test'};
+  function getLogger() {
+    log = new LogActionProvider(timer).value();
+  }
 
-    log(req, [], 'test message', startTime);
-
-    sinon.assert.calledWith(spy, sinon.match(match));
+  function timer(startTime: [number, number]): number {
+    return 100.02;
   }
 });

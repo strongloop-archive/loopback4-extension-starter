@@ -5,11 +5,12 @@
 
 import {ExtensionStarterBindings} from './keys';
 import {Component, ProviderMap} from '@loopback/core';
-import {LogProvider} from './providers/log-provider';
+import {LogActionProvider, ElapsedTimeProvider} from './';
 
 export class LogComponent implements Component {
   providers?: ProviderMap = {
-    [ExtensionStarterBindings.LOG_ACTION]: LogProvider,
+    [ExtensionStarterBindings.ELAPSED_TIME]: ElapsedTimeProvider,
+    [ExtensionStarterBindings.LOG_ACTION]: LogActionProvider,
   };
 
   constructor() {}

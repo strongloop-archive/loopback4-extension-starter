@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Client, createClientForApp, sinon} from '@loopback/testlab';
+import {Client, createClientForHandler, sinon} from '@loopback/testlab';
 import {inject} from '@loopback/context';
+import {Application} from '@loopback/core';
 import {
-  Application,
   get,
   param,
   SequenceHandler,
@@ -15,16 +15,19 @@ import {
   InvokeMethod,
   Send,
   Reject,
-  CoreBindings,
+  RestBindings,
   ParsedRequest,
   ServerResponse,
-} from '@loopback/core';
-import {LogComponent, ExtensionStarterBindings, LogFn} from '../..';
+  RestServer,
+  RestComponent,
+} from '@loopback/rest';
+import {LogComponent, ExtensionStarterBindings, LogFn} from '../../..';
 
-const coreSequenceActions = CoreBindings.SequenceActions;
+const coreSequenceActions = RestBindings.SequenceActions;
 
-describe('Logging', () => {
+describe('Logging (acceptance)', () => {
   let app: Application;
+  let server: RestServer;
 
   // tslint:disable-next-line:no-any
   let spy: any;
@@ -34,6 +37,7 @@ describe('Logging', () => {
 
   beforeEach(createApplication);
   beforeEach(createController);
+  beforeEach(getServerFromApp);
   beforeEach(createSequence);
 
   afterEach(() => {
@@ -41,16 +45,25 @@ describe('Logging', () => {
   });
 
   it('logs request information', async () => {
-    const client: Client = createClientForApp(app);
+    const client: Client = createClientForHandler(server.handleHttp);
     await client.get('/?name=John').expect(200, 'Hello John');
-    const expectedLog = 'ms: /?name=John : (John) => Hello John';
+    const expectedLog = '100.02ms: /?name=John : (John) => Hello John';
     sinon.assert.calledWith(spy, sinon.match(expectedLog));
   });
 
+  function timer(startTime: [number, number]): number {
+    return 100.02;
+  }
+
   function createApplication() {
     app = new Application({
-      components: [LogComponent],
+      components: [LogComponent, RestComponent],
+      rest: {
+        port: 3000,
+      },
     });
+
+    app.bind(ExtensionStarterBindings.ELAPSED_TIME).to(timer);
   }
 
   function createController() {
@@ -98,6 +111,10 @@ describe('Logging', () => {
       }
     }
 
-    app.sequence(LogSequence);
+    server.sequence(LogSequence);
+  }
+
+  async function getServerFromApp() {
+    server = await app.getServer(RestServer);
   }
 });

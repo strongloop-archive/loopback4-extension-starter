@@ -8,4 +8,5 @@
  */
 export namespace ExtensionStarterBindings {
   export const LOG_ACTION = 'extension-starter.actions.log';
+  export const ELAPSED_TIME = 'extension-starter.elapsed-timer';
 }

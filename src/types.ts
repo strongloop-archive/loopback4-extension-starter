@@ -1,9 +1,11 @@
-// Copyright IBM Corp. 2013,2017. All Rights Reserved.
-// Node module: loopback4-extension-starter
+// Copyright IBM Corp. 2017. All Rights Reserved.
+// Node module: loopback-next-extension-starter
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 // Types and interfaces exposed by the extension go here
+
+// tslint:disable:no-any
 
 // tslint:disable-next-line:no-any
 export type LogArgs = any[];
@@ -13,4 +15,19 @@ export type LogArgs = any[];
 export interface Logger {
   log(...args: LogArgs): void;
   error(...args: LogArgs): void;
+}
+
+import {ParsedRequest} from '@loopback/rest';
+
+export interface LogFn {
+  (
+    req: ParsedRequest,
+    args: any[],
+    result: any,
+    startTime?: [number, number],
+  ): void;
+}
+
+export interface ElapsedTimeFn {
+  (start: [number, number]): number;
 }

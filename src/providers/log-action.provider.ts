@@ -4,27 +4,29 @@
 // License text available at https://opensource.org/licenses/MIT
 
 // tslint:disable:no-any
-import {Provider} from '@loopback/context';
-import {ParsedRequest} from '@loopback/core';
 
-export interface LogFn {
-  (req: ParsedRequest, args: any, result: any, startTime?: number[]): void;
-}
+import {Provider, inject} from '@loopback/context';
+import {ParsedRequest} from '@loopback/rest';
+import {ExtensionStarterBindings} from '../keys';
+import {LogFn, ElapsedTimeFn} from '../types';
 
-export class LogProvider implements Provider<LogFn> {
-  constructor() {}
+export class LogActionProvider implements Provider<LogFn> {
+  constructor(
+    @inject(ExtensionStarterBindings.ELAPSED_TIME)
+    protected timer: ElapsedTimeFn,
+  ) {}
 
   value(): LogFn {
     return (
       req: ParsedRequest,
-      args: any,
+      args: any[],
       result: any,
       start?: [number, number],
     ) => {
       let resultLog = `${req.url} : (${args.join(',')}) => ${result}`;
       if (start) {
-        const diff = process.hrtime(start);
-        resultLog = `${diff[0] * 1000 + diff[1] * 1e-6}ms: ` + resultLog;
+        const time = this.timer(start);
+        resultLog = `${time}ms: ` + resultLog;
       }
 
       console.log(resultLog);

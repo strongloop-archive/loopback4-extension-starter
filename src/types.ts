@@ -5,7 +5,7 @@
 
 // Types and interfaces exposed by the extension go here
 
-// tslint:disable:no-any
+import {ParsedRequest} from '@loopback/rest';
 
 // tslint:disable-next-line:no-any
 export type LogArgs = any[];
@@ -17,17 +17,19 @@ export interface Logger {
   error(...args: LogArgs): void;
 }
 
-import {ParsedRequest} from '@loopback/rest';
-
 export interface LogFn {
   (
     req: ParsedRequest,
+    // tslint:disable-next-line:no-any
     args: any[],
+    // tslint:disable-next-line:no-any
     result: any,
     startTime?: [number, number],
   ): void;
+
+  startTimer(): [number, number];
 }
 
-export interface ElapsedTimeFn {
-  (start: [number, number]): number;
-}
+export type Time = number | [number, number];
+
+export type TimerFn = (start?: [number, number]) => Time;

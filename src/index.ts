@@ -4,8 +4,8 @@
 // License text available at https://opensource.org/licenses/MIT
 
 export * from './decorators/txIdFromHeader.decorator';
-export * from './providers/elapsed-time.provider';
 export * from './providers/log-action.provider';
+export * from './providers/timer.provider';
 export * from './providers/log.provider';
 export * from './mixins/logger.mixin';
 export * from './log.component';

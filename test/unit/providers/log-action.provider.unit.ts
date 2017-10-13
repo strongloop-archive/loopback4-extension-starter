@@ -5,44 +5,47 @@
 
 import {sinon} from '@loopback/testlab';
 import {ParsedRequest} from '@loopback/rest';
-import {LogActionProvider, LogFn} from '../../..';
+import {LogActionProvider, LogFn, Time} from '../../..';
 
 describe('LogProvider (unit)', () => {
-  // tslint:disable-next-line:no-any
-  let spy: any;
+  let spy: sinon.SinonSpy;
   let log: LogFn;
   const req = <ParsedRequest>{url: '/test'};
 
-  beforeEach(() => {
-    spy = sinon.spy(console, 'log');
-  });
-
+  beforeEach(createConsoleSpy);
   beforeEach(getLogger);
 
-  afterEach(() => {
-    spy.restore();
-  });
+  afterEach(restoreConsoleSpy);
 
   it('logs a value without a start time', () => {
     const match = '/test : () => test message';
 
     log(req, [], 'test message');
-    sinon.assert.calledWith(spy, sinon.match(match));
+    sinon.assert.calledWith(spy, match);
   });
 
   it('logs a value with a start time', () => {
     const match = '100.02ms: /test : () => test message';
-    const startTime = process.hrtime();
+    const startTime = log.startTimer();
 
     log(req, [], 'test message', startTime);
-    sinon.assert.calledWith(spy, sinon.match(match));
+    sinon.assert.calledWith(spy, match);
   });
 
   function getLogger() {
     log = new LogActionProvider(timer).value();
   }
 
-  function timer(startTime: [number, number]): number {
+  function createConsoleSpy() {
+    spy = sinon.spy(console, 'log');
+  }
+
+  function restoreConsoleSpy() {
+    spy.restore();
+  }
+
+  function timer(startTime?: [number, number]): Time {
+    if (!startTime) return [2, 2];
     return 100.02;
   }
 });

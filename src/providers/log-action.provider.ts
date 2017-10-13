@@ -3,23 +3,20 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-// tslint:disable:no-any
-
 import {Provider, inject} from '@loopback/context';
 import {ParsedRequest} from '@loopback/rest';
 import {ExtensionStarterBindings} from '../keys';
-import {LogFn, ElapsedTimeFn} from '../types';
+import {LogFn, TimerFn} from '../types';
 
 export class LogActionProvider implements Provider<LogFn> {
-  constructor(
-    @inject(ExtensionStarterBindings.ELAPSED_TIME)
-    protected timer: ElapsedTimeFn,
-  ) {}
+  constructor(@inject(ExtensionStarterBindings.TIMER) public timer: TimerFn) {}
 
   value(): LogFn {
-    return (
+    const fn = <LogFn>((
       req: ParsedRequest,
+      // tslint:disable-next-line:no-any
       args: any[],
+      // tslint:disable-next-line:no-any
       result: any,
       start?: [number, number],
     ) => {
@@ -30,6 +27,12 @@ export class LogActionProvider implements Provider<LogFn> {
       }
 
       console.log(resultLog);
+    });
+
+    fn.startTimer = () => {
+      return <[number, number]>this.timer();
     };
+
+    return fn;
   }
 }

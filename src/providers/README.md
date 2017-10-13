@@ -1,7 +1,6 @@
 # Providers
 
-This directory contains providers contributing additional bindings, for example
-custom sequence actions.
+This directory contains providers contributing additional bindings, for example custom sequence actions.
 
 ## Overview
 
@@ -9,21 +8,21 @@ A [provider](http://loopback.io/doc/en/lb4/Creating-components.html#providers) i
 
 Here we create a provider for a logging function that can be used as a new action in a custom [sequence](http://loopback.io/doc/en/lb4/Sequence.html).
 
-The logger will log the URL, the parsed request parameters, and the result. The logger is also capable of timing the sequence if you start a timer at the start of the sequence using `process.hrtime()`.
+The logger will log the URL, the parsed request parameters, and the result. The logger is also capable of timing the sequence if you start a timer at the start of the sequence using `this.logger.startTimer()`.
 
 ## Basic Usage
 
-### ElapsedTimeProvider
+### TimerProvider
 
-ElapsedTimeProvider is automatically bound to your Application's [Context](http://loopback.io/doc/en/lb4/Context.html) using the LogComponent which exports this provider with a binding key of `extension-starter.elapsed-timer`. You can learn more about components in the [related resources section](#related-resources).
+TimerProvider is automatically bound to your Application's [Context](http://loopback.io/doc/en/lb4/Context.html) using the LogComponent which exports this provider with a binding key of `extension-starter.timer`. You can learn more about components in the [related resources section](#related-resources).
 
-This provider makes availble to your application a timer function which given a start time _(given as an array [seconds, nanoseconds])_ can give you a total time elapsed since the start in milliseconds. This is used by LogComponent to allow a user to time a Sequence. 
+This provider makes availble to your application a timer function which given a start time _(given as an array [seconds, nanoseconds])_ can give you a total time elapsed since the start in milliseconds. The timer can also start timing if no start time is given. This is used by LogComponent to allow a user to time a Sequence. 
 
-*NOTE:* _You can get the start time in the required format by using `process.hrtime()`._
+*NOTE:* _You can get the start time in the required format by using `this.logger.startTimer()`._
 
 You can provide your own implementation of the elapsed time function by binding it to the binding key (accessible via `ExtensionStarterBindings`) as follows:
-```
-app.bind(ExtensionStarterBindings.ELAPSED_TIME).to(timerFn);
+```ts
+app.bind(ExtensionStarterBindings.TIMER).to(timerFn);
 ``` 
 
 ### LogProvider
@@ -33,16 +32,16 @@ LogProvider can automatically be bound to your Application's Context using the L
 The key can be accessed by importing `ExtensionStarterBindings` as follows:
 
 **Example: Binding Keys**
-```
+```ts
 import {ExtensionStarterBindings} from 'HelloExtensions';
 // Key can be accessed as follows now
 const key = ExtensionStarterBindings.LOG_ACTION;
 ```
 
-LogProvider gives us a seuqence action. In order to use the sequence action, you must define your own sequence as shown below. 
+LogProvider gives us a seuqence action and a `startTimer` function. In order to use the sequence action, you must define your own sequence as shown below. 
 
 **Example: Sequence**
-```
+```ts
 class LogSequence implements SequenceHandler {
   constructor(
     @inject(coreSequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
@@ -61,10 +60,9 @@ class LogSequence implements SequenceHandler {
     let args: any = [];
     let result: any;
 
-    // Optional start time to log processing time of request.
-    // process.time() gives us an array [seconds, nanoseconds] as expected
-    // by the default ElapsedTimeProvider function.
-    const start = process.hrtime();
+    // Optionally start timing the sequence using the timer
+    // function available via LogFn
+    const start = this.logger.startTimer();
 
     try {
       const route = this.findRoute(req);
@@ -85,7 +83,7 @@ class LogSequence implements SequenceHandler {
 Once a sequence has been written, we can just use that in our Application as follows:
 
 **Example: Application**
-```
+```ts
 const app = new Application({
   sequence: LogSequence,
   components: [LogComponent]

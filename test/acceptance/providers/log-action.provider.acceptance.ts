@@ -21,37 +21,32 @@ import {
   RestServer,
   RestComponent,
 } from '@loopback/rest';
-import {LogComponent, ExtensionStarterBindings, LogFn} from '../../..';
+import {LogComponent, ExtensionStarterBindings, LogFn, Time} from '../../..';
 
 const coreSequenceActions = RestBindings.SequenceActions;
 
 describe('Logging (acceptance)', () => {
   let app: Application;
   let server: RestServer;
+  let spy: sinon.SinonSpy;
 
-  // tslint:disable-next-line:no-any
-  let spy: any;
-  beforeEach(() => {
-    spy = sinon.spy(console, 'log');
-  });
-
+  beforeEach(createConsoleSpy);
   beforeEach(createApplication);
   beforeEach(createController);
   beforeEach(getServerFromApp);
   beforeEach(createSequence);
 
-  afterEach(() => {
-    spy.restore();
-  });
+  afterEach(restoreConsoleSpy);
 
   it('logs request information', async () => {
     const client: Client = createClientForHandler(server.handleHttp);
     await client.get('/?name=John').expect(200, 'Hello John');
     const expectedLog = '100.02ms: /?name=John : (John) => Hello John';
-    sinon.assert.calledWith(spy, sinon.match(expectedLog));
+    sinon.assert.calledWith(spy, expectedLog);
   });
 
-  function timer(startTime: [number, number]): number {
+  function timer(startTime?: [number, number]): Time {
+    if (!startTime) return [2, 2];
     return 100.02;
   }
 
@@ -63,7 +58,7 @@ describe('Logging (acceptance)', () => {
       },
     });
 
-    app.bind(ExtensionStarterBindings.ELAPSED_TIME).to(timer);
+    app.bind(ExtensionStarterBindings.TIMER).to(timer);
   }
 
   function createController() {
@@ -96,7 +91,7 @@ describe('Logging (acceptance)', () => {
         let args: any = [];
         // tslint:disable-next-line:no-any
         let result: any;
-        const start = process.hrtime();
+        const start = this.logger.startTimer();
 
         try {
           const route = this.findRoute(req);
@@ -112,6 +107,14 @@ describe('Logging (acceptance)', () => {
     }
 
     server.sequence(LogSequence);
+  }
+
+  function createConsoleSpy() {
+    spy = sinon.spy(console, 'log');
+  }
+
+  function restoreConsoleSpy() {
+    spy.restore();
   }
 
   async function getServerFromApp() {

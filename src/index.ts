@@ -6,7 +6,6 @@
 export * from './decorators/txIdFromHeader.decorator';
 export * from './providers/log-action.provider';
 export * from './providers/timer.provider';
-export * from './providers/log.provider';
 export * from './mixins/logger.mixin';
 export * from './log.component';
 export * from './types';

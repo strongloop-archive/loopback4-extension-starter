@@ -35,9 +35,8 @@ class ColorLogger implements Logger {
   }
 
   error(...args: LogArgs) {
-    const data = args.join(' ');
     // log in red color
-    console.log('\x1b[31m error: ' + data + '\x1b[0m');
+    console.log('\x1b[31m error: ', ...args, '\x1b[0m');
   }
 }
 ```

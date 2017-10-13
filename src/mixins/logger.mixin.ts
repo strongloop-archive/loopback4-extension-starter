@@ -14,7 +14,6 @@ import {Logger} from '../types';
 * component function to allow it to register Logger's automatically.
 *
 * ```ts
-*
 * class MyApplication extends LoggerMixin(Application) {}
 * ```
 */
@@ -38,7 +37,6 @@ export function LoggerMixin<T extends Constructor<any>>(superClass: T) {
     * @param Logger The Logger to add.
     *
     * ```ts
-    *
     * class Logger {
     *   log(...args: any) {
     *     console.log(...args);
@@ -60,7 +58,6 @@ export function LoggerMixin<T extends Constructor<any>>(superClass: T) {
     * @param component The component to add.
     *
     * ```ts
-    *
     * export class ProductComponent {
     *   controllers = [ProductController];
     *   loggers = [ProductLogger];

@@ -9,28 +9,21 @@ import {sinon, Client, createClientForHandler} from '@loopback/testlab';
 import {LoggerMixin, Logger, LogArgs} from '../../..';
 
 describe('logger.mixin (acceptance)', () => {
-  // tslint:disable-next-line:no-any
-  let app: any;
+  let app: LoggerApplication;
   let server: RestServer;
-  // tslint:disable-next-line:no-any
-  let spy: any;
+  let spy: sinon.SinonSpy;
 
   beforeEach(createApp);
-  beforeEach(createLogger);
   beforeEach(createController);
   beforeEach(getServerFromApp);
-  beforeEach(() => {
-    spy = sinon.spy(console, 'log');
-  });
+  beforeEach(createConsoleSpy);
 
-  afterEach(() => {
-    spy.restore();
-  });
+  afterEach(restoreConsoleSpy);
 
   it('.log() logs request information', async () => {
     const client: Client = createClientForHandler(server.handleHttp);
     await client.get('/?name=John').expect(200, 'Hi John');
-    sinon.assert.calledWith(spy, sinon.match('log: hello() called with: John'));
+    sinon.assert.calledWith(spy, 'log:', 'hello() called with:', 'John');
   });
 
   it('.error() logs request information', async () => {
@@ -38,38 +31,35 @@ describe('logger.mixin (acceptance)', () => {
     await client.get('/error?name=John').expect(200, 'Hi John');
     sinon.assert.calledWith(
       spy,
-      sinon.match('error: hello() called with: John'),
+      '\x1b[31m error:',
+      'hello() called with:',
+      'John',
+      '\x1b[0m',
     );
   });
 
-  function createApp() {
-    class LoggerApplication extends LoggerMixin(Application) {
-      // tslint:disable-next-line:no-any
-      constructor(...args: any[]) {
-        super({
-          components: [RestComponent],
-        });
-      }
+  class LoggerApplication extends LoggerMixin(Application) {
+    constructor() {
+      super({
+        components: [RestComponent],
+        loggers: [ColorLogger],
+      });
     }
-
-    app = new LoggerApplication();
   }
 
-  function createLogger() {
-    class ColorLogger implements Logger {
-      log(...args: LogArgs) {
-        const data = 'log: ' + args.join(' ');
-        console.log(data);
-      }
-
-      error(...args: LogArgs) {
-        const data = args.join(' ');
-        // log in red color
-        console.log('\x1b[31m error: ' + data + '\x1b[0m');
-      }
+  class ColorLogger implements Logger {
+    log(...args: LogArgs) {
+      console.log('log:', ...args);
     }
 
-    app.logger(ColorLogger);
+    error(...args: LogArgs) {
+      // log in red color
+      console.log('\x1b[31m error:', ...args, '\x1b[0m');
+    }
+  }
+
+  function createApp() {
+    app = new LoggerApplication();
   }
 
   function createController() {
@@ -92,6 +82,14 @@ describe('logger.mixin (acceptance)', () => {
     }
 
     app.controller(MyController);
+  }
+
+  function createConsoleSpy() {
+    spy = sinon.spy(console, 'log');
+  }
+
+  function restoreConsoleSpy() {
+    spy.restore();
   }
 
   async function getServerFromApp() {

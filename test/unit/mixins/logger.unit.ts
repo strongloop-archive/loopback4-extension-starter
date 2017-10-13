@@ -67,8 +67,7 @@ describe('LoggerMixin (unit)', () => {
     }
 
     error(...args: LogArgs) {
-      const data = args.join(' ');
-      console.log('\x1b[31m error: ' + data + '\x1b[0m');
+      console.log('\x1b[31m error: ', ...args, '\x1b[0m');
     }
   }
 

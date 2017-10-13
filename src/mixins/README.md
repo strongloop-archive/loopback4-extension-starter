@@ -114,18 +114,43 @@ mountComponentLoggers(component: Constructor<any>) {
 }
 ```
 
+## Retrieving the Logger instance
+Now that we have bound a Logger to our Application via one of the many ways made possible by `LoggerMixin`, we need to be able to retrieve it so we can use it. Let's say we want to use it in a controller. Here's an example to retrieving it so we can use it. 
+```ts
+class MyController {
+  constructor(@inject('loggers.ColorLogger') protected log: Logger) {}
+
+  helloWorld() {
+    this.log.log('hello log');
+    this.log.error('hello error');
+  }
+}
+```
 
 ## Examples for using LoggerMixin
-```
-// Using the app's .logger() function. 
+### Using the app's `.logger()` method
+```ts
 class LoggingApplication extends LoggerMixin(Application) {
   constructor(...args: any[]) {
     super(...args);
     this.logger(ColorLogger);
   }
 }
+```
 
-// Binding a Logger provided by a component
+### Using the app's constructor
+```ts
+class LoggerApplication extends LoggerMixin(Application) {
+  constructor() {
+    super({
+      loggers: [ColorLogger],
+    });
+  }
+}
+```
+
+### Binding a Logger provided by a component
+```ts
 class LoggingComponent implements Component{
   loggers: [ColorLogger];
 }

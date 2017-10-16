@@ -1,5 +1,5 @@
 // Copyright IBM Corp. 2013,2017. All Rights Reserved.
-// Node module: loopback-next-extension-starter
+// Node module: loopback4-extension-starter
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
@@ -32,9 +32,10 @@ describe('LoggerMixin (unit)', () => {
 
   it('binds user defined component with Logger in constructor', () => {
     const myApp = new AppWithLogger({
-      loggers: [MyLogger],
+      loggers: [TestComponent],
     });
 
+    expectComponentToBeBound(myApp, TestComponent);
     expectLoggerToBeBound(myApp);
   });
 

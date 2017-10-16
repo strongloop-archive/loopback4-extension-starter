@@ -4,7 +4,7 @@ This directory contains source files for the mixins exported by this extension.
 
 ## Overview
 
-Sometimes it's helpful to write partial classes and then combining them together to build more powerful classes. This pattern is called Mixins (mixing in partial classes) and is supported by LoopBack 4. 
+Sometimes it's helpful to write partial classes and then combining them together to build more powerful classes. This pattern is called Mixins (mixing in partial classes) and is supported by LoopBack 4.
 
 LoopBack 4 supports mixins at an `Application` level. Your partial class can then be mixed into the `Application` class. A mixin class can modify or override existing methods of the class or add new ones! It is also possible to mixin multiple classes together as needed.
 
@@ -25,7 +25,7 @@ class MyApp extends MyMixinClass(MyMixinClass2(Application)) {
 For hello-extensions we write a simple Mixin that allows the `Application` class to bind a `Logger` class from ApplicationOptions, Components, or `.logger()` method that is mixed in. `Logger` instances are bound to the key `loggers.${Logger.name}`. Once a Logger has been bound, the user can retrieve it by using [Dependency Injection](http://loopback.io/doc/en/lb4/Dependency-injection.html) and the key for the `Logger`.
 
 ### What is a Logger?
-> A Logger class is provides a mechanism for logging messages of varying priority by providing an implementation for `Logger.info()` & `Logger.error()`. An example of a Logger is `console` which has `console.log()` and `console.error()`. 
+> A Logger class is provides a mechanism for logging messages of varying priority by providing an implementation for `Logger.info()` & `Logger.error()`. An example of a Logger is `console` which has `console.log()` and `console.error()`.
 
 #### An example Logger
 ```ts
@@ -45,7 +45,7 @@ class ColorLogger implements Logger {
 A complete & functional implementation can be found in `logger.mixin.ts`. *Here are some key things to keep in mind when writing your own Mixin*.
 
 ### constructor()
-A Mixin constructor must take an array of any type as it's argument. This would represent `ApplicationOptions` for our base class `Application` as well as any properties we would like for our Mixin. 
+A Mixin constructor must take an array of any type as it's argument. This would represent `ApplicationOptions` for our base class `Application` as well as any properties we would like for our Mixin.
 
 It is also important for the constructor to call `super(args)` so `Application` continues to work as expected.
 ```ts
@@ -55,7 +55,7 @@ constructor(...args: any[]) {
 ```
 
 ### Binding via `ApplicationOptions`
-As mentioned earlier, since our `args` represents `ApplicationOptions`, we can make it possible for users to pass in their `Logger` implementations in a `loggers` array on `ApplicationOptions`. We can then read the array and automatically bind these for the user. 
+As mentioned earlier, since our `args` represents `ApplicationOptions`, we can make it possible for users to pass in their `Logger` implementations in a `loggers` array on `ApplicationOptions`. We can then read the array and automatically bind these for the user.
 
 #### Example user experience
 ```ts
@@ -98,7 +98,7 @@ component(component: Constructor<any>) {
 }
 ```
 
-We have now modified `.component()` to do it's thing and then call our method `mountComponentLoggers()`. In this method is where we check for `Logger` implementations declared by the component in a `loggers` array by retrieving the instance of the `Component`. Then if `loggers` array exists, we bind the `Logger` instances as normal (by leveraging our `.logger()` method). 
+We have now modified `.component()` to do it's thing and then call our method `mountComponentLoggers()`. In this method is where we check for `Logger` implementations declared by the component in a `loggers` array by retrieving the instance of the `Component`. Then if `loggers` array exists, we bind the `Logger` instances as normal (by leveraging our `.logger()` method).
 
 ```ts
 mountComponentLoggers(component: Constructor<any>) {
@@ -114,7 +114,7 @@ mountComponentLoggers(component: Constructor<any>) {
 ```
 
 ## Retrieving the Logger instance
-Now that we have bound a Logger to our Application via one of the many ways made possible by `LoggerMixin`, we need to be able to retrieve it so we can use it. Let's say we want to use it in a controller. Here's an example to retrieving it so we can use it. 
+Now that we have bound a Logger to our Application via one of the many ways made possible by `LoggerMixin`, we need to be able to retrieve it so we can use it. Let's say we want to use it in a controller. Here's an example to retrieving it so we can use it.
 ```ts
 class MyController {
   constructor(@inject('loggers.ColorLogger') protected log: Logger) {}

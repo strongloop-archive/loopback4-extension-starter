@@ -32,7 +32,7 @@ describe('LoggerMixin (unit)', () => {
 
   it('binds user defined component with Logger in constructor', () => {
     const myApp = new AppWithLogger({
-      loggers: [TestComponent],
+      components: [TestComponent],
     });
 
     expectComponentToBeBound(myApp, TestComponent);

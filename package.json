@@ -8,20 +8,20 @@
   },
   "scripts": {
     "build": "npm run build:dist && npm run build:dist6",
-    "build:dist": "tsc --target es2017 --outDir dist",
-    "build:dist6": "tsc --target es2015 --outDir dist6",
-    "build:watch": "tsc --watch",
-    "clean": "rm -rf dist dist6",
+    "build:dist": "lb-tsc --target es2017 --outDir dist",
+    "build:dist6": "lb-tsc --target es2015 --outDir dist6",
+    "build:watch": "lb-tsc --watch",
+    "clean": "lb-clean dist dist6",
     "lint": "npm run prettier:check && npm run tslint",
     "lint:fix": "npm run prettier:fix && npm run tslint:fix",
-    "prettier:cli": "prettier \"**/*.ts\" \"**/*.js\"",
+    "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
     "prettier:check": "npm run prettier:cli -- -l",
     "prettier:fix": "npm run prettier:cli -- --write",
-    "tslint": "tslint -c tslint.full.json --project tsconfig.json --type-check",
+    "tslint": "lb-tslint -c tslint.build.json --project tsconfig.json",
     "tslint:fix": "npm run lint -- --fix",
     "prepublish": "npm run build",
     "pretest": "npm run clean && npm run build",
-    "test": "/bin/bash -c '[[ $(node -v) =~ [[:digit:]]+ ]] && [[ ${BASH_REMATCH[0]} -gt 6 ]]' && mocha dist/test || mocha dist6/test",
+    "test": "lb-dist mocha DIST/test",
     "posttest": "npm run lint",
     "test:dev": "mocha && npm run lint"
   },
@@ -49,11 +49,9 @@
     "@loopback/rest": "^4.0.0-alpha.3"
   },
   "devDependencies": {
+    "@loopback/build": "^4.0.0-alpha.3",
     "@loopback/testlab": "^4.0.0-alpha.9",
     "@types/mocha": "^2.2.43",
-    "mocha": "^3.5.3",
-    "prettier": "^1.7.4",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.2"
+    "mocha": "^4.0.1"
   }
 }

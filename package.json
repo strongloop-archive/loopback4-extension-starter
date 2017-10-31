@@ -22,7 +22,7 @@
     "prettier:fix": "npm run prettier:cli -- --write",
     "tslint": "lb-tslint -c tslint.build.json --project tsconfig.json",
     "tslint:fix": "npm run lint -- --fix",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "pretest": "npm run clean && npm run build",
     "test": "lb-dist mocha DIST/test",
     "posttest": "npm run lint",

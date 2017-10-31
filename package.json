@@ -2,6 +2,9 @@
   "name": "loopback-next-extension-starter",
   "version": "1.0.0",
   "description": "A starter project for LoopBack Next Extensions",
+  "keywords": [
+    "loopback-extension"
+  ],
   "main": "index.js",
   "engines": {
     "node": ">=6"

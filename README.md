@@ -1,5 +1,7 @@
 # loopback4-extension-starter
 
+**This repository has been deprecated. See [Examples and tutorials](http://loopback.io/doc/en/lb4/Examples-and-tutorials.html) for the list of actively maintained examples.**
+ 
 ## Summary
 A quick starting point for LoopBack 4 Extension developers.
 
